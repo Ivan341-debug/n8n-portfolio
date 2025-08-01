@@ -30,13 +30,6 @@ Cada pasta de projeto contém:
 
 ---
 
-🌐 **Site do Portfólio**
-
-Acesse o portfólio visual com todos os workflows organizados:  
-[https://seu-usuario.github.io/n8n-portfolio](https://seu-usuario.github.io/n8n-portfolio) *(em breve)*
-
----
-
 🛠️ **Tecnologias & Ferramentas Utilizadas**
 
 - [n8n.io](https://n8n.io/)
