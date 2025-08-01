@@ -1,51 +1,51 @@
-🧠 Portfólio de Automações com n8n
+🧠 Portfólio de Workflows n8n – por Ivan Martins
 
-Olá! Sou Ivan Martins — entusiasta de automações empresariais e especialista em construir soluções reais usando **n8n**, **inteligência artificial** e ferramentas open-source.
+Olá, sou Ivan Martins! Trabalho com automações inteligentes aplicadas a contextos reais, conectando APIs, inteligência artificial e processos empresariais com o poder do [n8n.io](https://n8n.io/).
 
-Este portfólio documenta minha trajetória desenvolvendo automações que resolvem **problemas práticos do dia a dia**, desde integrações simples até fluxos complexos com IA, atendimentos, análise de dados e muito mais.
-
-Cada projeto foi pensado para demonstrar:
-
-✅ Habilidades em automação aplicadas a cenários reais  
-🔗 Integrações via API com ferramentas populares (Google, WhatsApp, Slack, CRMs etc.)  
-🧠 Workflows com agentes de IA, classificadores, extratores e tomadores de decisão  
-📝 Clareza na documentação e compartilhamento do conhecimento  
+Este repositório reúne uma coleção dos meus workflows mais relevantes — todos desenvolvidos com foco em resolver **problemas práticos**, **otimizar rotinas** e **integrar sistemas** de forma simples, escalável e acessível.
 
 ---
 
-📁 **Visão Geral dos Projetos**
+📌 **O que você vai encontrar aqui**
 
-| Nível        | Projetos |
-|--------------|----------|
-| **Iniciante** | Bot de lembrete por e-mail, Captura de formulário via webhook, Digest de RSS por e-mail |
-| **Intermediário** | IA de atendimento por WhatsApp, Agendamento com Cal.com, Relatório financeiro automatizado |
-| **Avançado** | Classificador de leads com IA, Analisador de e-mails com RAG, Agente comercial multicanal |
+- Soluções reais aplicadas a empresas e projetos pessoais
+- Integrações com ferramentas como WhatsApp, Gmail, Google Sheets, Slack, CRMs e muito mais
+- Workflows com suporte a IA: classificadores, sumários automáticos, tratamento de linguagem natural e lógica condicional inteligente
+- Documentação clara e pronta para quem quiser importar, adaptar ou aprender com os fluxos
 
-Cada pasta de projeto contém:
+---
 
+📁 **Organização dos Projetos**
+
+| Nível        | Exemplos de Workflows |
+|--------------|-----------------------|
+| **Básico**   | Lembrete automático por e-mail, Coletor de dados via webhook, Digest de RSS |
+| **Intermediário** | Atendimento por WhatsApp com IA, Agendamento com Google Calendar, Registro de leads |
+| **Avançado** | Classificação inteligente de clientes, Análise de e-mails com IA, Automações com RAG |
+
+Cada projeto inclui:
 - 🧩 Arquivo `.json` do workflow
-- 🖼️ Imagens do fluxo no editor n8n
-- 📘 `README.md` com descrição clara, instruções e uso
-- 🔗 Link para visualização no portfólio (HTML)
+- 🖼️ Capturas de tela ou explicações visuais
+- 📘 README com descrição, instruções e links úteis
 
 ---
 
-🛠️ **Tecnologias & Ferramentas Utilizadas**
+🛠️ **Tecnologias e recursos utilizados**
 
-- [n8n.io](https://n8n.io/)
-- OpenAI, RAG e classificadores
-- Webhooks e APIs REST
-- Gmail, Google Sheets, Slack, WhatsApp (via Evolution API)
-- CRMs como EspoCRM, Cal.com, e mais
-
----
-
-✅ **Status do Repositório**
-
-- 🟢 Estrutura do portfólio criada  
-- 🟢 Primeiros projetos publicados  
-- 🛠️ Novos workflows sendo documentados continuamente  
+- n8n (self-hosted)
+- APIs REST e Webhooks
+- OpenAI / GPT / RAG
+- Google Workspace, Slack, WhatsApp (via Evolution API)
+- CRMs open-source como EspoCRM
+- PostgreSQL, Typebot, Cal.com e outros serviços integráveis
 
 ---
 
-🚀 Sinta-se à vontade para explorar, usar, adaptar ou contribuir!
+📌 **Status do Projeto**
+
+- ✅ Estrutura do repositório finalizada  
+- ✅ Primeiros workflows publicados  
+- 🚧 Expansão e melhorias em andamento  
+
+Fique à vontade para explorar, reutilizar ou contribuir com novas ideias.  
+Sugestões são sempre bem-vindas!
