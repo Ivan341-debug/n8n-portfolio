@@ -1,0 +1,164 @@
+{
+  "name": "Previsão do tempo",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "266287d5-7f3a-4122-b25b-73eb7c8f3868",
+      "name": "Gatilho"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.timestamp }}",
+        "format": "=yyyy-MM-dd",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        160,
+        0
+      ],
+      "id": "fdebd72d-dcba-4cc4-a731-9918770f2c92",
+      "name": "Formata a Data do Dia"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "239dc097-9476-4118-97be-4a206d8e661e",
+              "name": "data",
+              "value": "=timezone=auto&start_date={{ $json.formattedDate }}&end_date={{ $json.formattedDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        0
+      ],
+      "id": "44f820e5-8749-40d9-8e0e-b2d77d853ce1",
+      "name": "Data Real API",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "url": "=https://api.open-meteo.com/v1/forecast?latitude=-23.5505&longitude=-46.6333&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&{{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        464,
+        0
+      ],
+      "id": "a76ea5a9-2521-4415-a33c-f23875b5c4e3",
+      "name": "Coleta Informações do Clima",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Luminous",
+        "remoteJid": "{numero}",
+        "messageText": "=Bom dia, como você está?\n\nA previsão para hoje é:\n\n*Máxima de:* {{ $json.daily.temperature_2m_max[0] }}\n*Mínima de:* {{ $json.daily.temperature_2m_min[0] }}\n*Com uma probabilidade de chuva de:* {{ $json.daily.precipitation_probability_max[0] }}%",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        656,
+        0
+      ],
+      "id": "0e0e3367-0f48-4745-81a1-90dd8a141ebe",
+      "name": "Envia as Informações",
+      "notesInFlow": true,
+      "credentials": {
+        "evolutionApi": {
+          "id": "VwwuJ4DE9Bxm8aGb",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gatilho": {
+      "main": [
+        [
+          {
+            "node": "Formata a Data do Dia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formata a Data do Dia": {
+      "main": [
+        [
+          {
+            "node": "Data Real API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Real API": {
+      "main": [
+        [
+          {
+            "node": "Coleta Informações do Clima",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Coleta Informações do Clima": {
+      "main": [
+        [
+          {
+            "node": "Envia as Informações",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1
+  },
+  "versionId": "d3bee7dc-0cee-4d51-82b3-243d87700adb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "19f0052d12d90c748119265be57d786d7f11ee37d4c5efd3b9bda01d5c95e03d"
+  },
+  "id": "9sTdUTUB28OBUiZ4",
+  "tags": []
+}

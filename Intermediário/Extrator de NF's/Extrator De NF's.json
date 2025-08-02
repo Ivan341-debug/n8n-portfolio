@@ -1,0 +1,392 @@
+{
+  "name": "Extrator De NF's",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "iago",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8804ba03-e852-4cc4-be91-d17d65f7b128",
+      "name": "Webhook",
+      "webhookId": "1db74825-4c59-4f58-88cf-5fcde6d74e38"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        -80
+      ],
+      "id": "340bf407-c741-430d-9bd9-be4ca80dcc2d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "pphusLJZcJjP15VY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"Chave de Acesso\": \"Chave de Acesso\",\n    \"Prestador\": \"Razão Social do Prestador\",\n    \"CNPJ Prestador\": \"CNPJ do Prestador\",\n    \"Tomador\": \"Razão Social do Tomador\",\n    \"CNPJ/CPF Tomador\": \"CNPJ/CPF do Tomador\",\n    \"Serviços\": \"Descrição dos serviços prestados\",\n    \"Valor Total\": \"Valor Total da Nota\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1248,
+        -80
+      ],
+      "id": "ddb63086-dd93-46a5-bcac-f5ff05a6265c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.data.message.documentMessage.mimetype }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "f988177b-ed10-4fd5-b024-7717e6e3abed"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5a258123-1c59-48db-aa5c-a44270b92de4",
+                    "leftValue": "={{ $json.body.data.message.imageMessage.mimetype }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagem"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        368,
+        0
+      ],
+      "id": "b0e19b61-3963-4967-b603-983f2f88ea69",
+      "name": "Imagem ou PDF",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "body.data.message.base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        656,
+        -176
+      ],
+      "id": "cbc025c6-2dde-4a1a-95ed-3d54f75631f0",
+      "name": "Base64 para PDF",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        816,
+        -176
+      ],
+      "id": "c167bd23-3d9f-41b6-a769-3fe58481620b",
+      "name": "Conteúdo PDF",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "body.data.message.base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        576,
+        64
+      ],
+      "id": "53b8eb77-64a3-4756-8391-377393faa777",
+      "name": "Base64 para Imagem",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini-2024-07-18",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI-2024-07-18"
+        },
+        "text": "Você é um especialista em notas fiscais de serviço eletrônicas (NFS-e). \nExtraia as seguintes informações do texto fornecido:\n\n1. Chave de Acesso (44 caracteres)\n2. Razão Social do Prestador\n3. CNPJ do Prestador (formatado: XX.XXX.XXX/XXXX-XX)\n4. Razão Social do Tomador\n5. CNPJ/CPF do Tomador (formatado: XX.XXX.XXX/XXXX-XX)\n6. Descrição dos serviços prestados\n7. Valor Total da Nota (formatado como moeda)\n\nRetorne uma lista organizada na ordem que lhe foi fornecida, sem comentários ou texto adicional",
+        "inputType": "base64",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        736,
+        64
+      ],
+      "id": "eddbda75-c9b2-4896-8539-7496402e6272",
+      "name": "Análise da Imagem",
+      "notesInFlow": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "pphusLJZcJjP15VY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Luminous",
+        "remoteJid": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+        "messageText": "={{ $json.choices[0].message.content }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        896,
+        64
+      ],
+      "id": "7e6d3c13-721a-4a53-ba0d-d94f799bc4ce",
+      "name": "Enviar Análise",
+      "notesInFlow": true,
+      "credentials": {
+        "evolutionApi": {
+          "id": "VwwuJ4DE9Bxm8aGb",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Você é um especialista em notas fiscais de serviço eletrônicas (NFS-e). \nExtraia as seguintes informações do texto fornecido:\n\n1. Chave de Acesso (44 caracteres)\n2. Razão Social do Prestador\n3. CNPJ do Prestador (formatado: XX.XXX.XXX/XXXX-XX)\n4. Razão Social do Tomador\n5. CNPJ/CPF do Tomador (formatado: XX.XXX.XXX/XXXX-XX)\n6. Descrição dos serviços prestados\n7. Valor Total da Nota (formatado como moeda)\n\nRetorne APENAS um objeto JSON válido, sem comentários ou texto adicional"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        1072,
+        -240
+      ],
+      "id": "9c978fb2-9e95-4dc9-ad94-7e0f69072bdb",
+      "name": "Agente de Análise",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "Luminous",
+        "remoteJid": "={{ $('Webhook').item.json.body.data.key.remoteJid }}",
+        "messageText": "=*Chave de Acesso:* {{ $json.output['Chave de Acesso'] }}\n*Razão Social Prestador:* {{ $json.output.Prestador }}\n*CNPJ Prestador:* {{ $json.output['CNPJ Prestador'] }}\n*Razão Social Tomador:* {{ $json.output.Tomador }}\n*CNPJ Tomador:* {{ $json.output['CNPJ/CPF Tomador'] }}\n*Descrição dos Serviços:* {{ $json.output['Serviços'] }}\n*Valor Total:* {{ $json.output['Valor Total'] }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        -240
+      ],
+      "id": "5aa250d6-cf00-4717-a537-fef75a970e02",
+      "name": "Enviar Análise PDF",
+      "notesInFlow": true,
+      "credentials": {
+        "evolutionApi": {
+          "id": "VwwuJ4DE9Bxm8aGb",
+          "name": "Evolution account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Imagem ou PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente de Análise",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agente de Análise",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Imagem ou PDF": {
+      "main": [
+        [
+          {
+            "node": "Base64 para PDF",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Base64 para Imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 para PDF": {
+      "main": [
+        [
+          {
+            "node": "Conteúdo PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conteúdo PDF": {
+      "main": [
+        [
+          {
+            "node": "Agente de Análise",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 para Imagem": {
+      "main": [
+        [
+          {
+            "node": "Análise da Imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Análise da Imagem": {
+      "main": [
+        [
+          {
+            "node": "Enviar Análise",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente de Análise": {
+      "main": [
+        [
+          {
+            "node": "Enviar Análise PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0c02acd9-e109-47e5-b619-0babd28725cc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "19f0052d12d90c748119265be57d786d7f11ee37d4c5efd3b9bda01d5c95e03d"
+  },
+  "id": "9KOGeZr0GaPb29Mv",
+  "tags": []
+}
